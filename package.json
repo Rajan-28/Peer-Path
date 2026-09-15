@@ -1,0 +1,12 @@
+{
+  "name": "peerpath",
+  "version": "1.0.0",
+  "description": "Safe video + text connections with real WebRTC",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js"
+  },
+  "keywords": ["webrtc", "omegle", "chat", "video"],
+  "license": "MIT"
+}

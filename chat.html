@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect – PeerPath</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' },
+                        accent: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d' },
+                        soft: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Poppins', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-soft-50 text-slate-800 antialiased h-screen overflow-hidden">
+
+    <!-- ========== AUTH MODAL (Sign Up / Sign In) ========== -->
+    <div id="auth-modal" class="fixed inset-0 z-[100] bg-slate-900/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-5 text-white text-center">
+                <div class="w-12 h-12 mx-auto rounded-xl bg-white/20 flex items-center justify-center mb-3">
+                    <i class="fas fa-route text-xl"></i>
+                </div>
+                <h1 class="font-display text-2xl font-bold">PeerPath</h1>
+                <p class="text-primary-100 text-sm mt-1">Safe connections across the world</p>
+            </div>
+
+            <div class="px-6 pt-4">
+                <div class="flex rounded-xl bg-soft-100 p-1 mb-5">
+                    <button type="button" id="tab-signup" class="flex-1 py-2 rounded-lg text-sm font-semibold bg-white shadow text-primary-700 transition">Sign Up</button>
+                    <button type="button" id="tab-signin" class="flex-1 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-700 transition">Sign In</button>
+                </div>
+            </div>
+
+            <!-- Sign In Form (hidden by default — Sign Up first) -->
+            <form id="form-signin" class="px-6 pb-6 space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5">Username or Email</label>
+                    <input id="signin-user" type="text" required autocomplete="username"
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-soft-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder="yourname">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5">Password</label>
+                    <input id="signin-pass" type="password" required autocomplete="current-password"
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-soft-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder="••••••••">
+                </div>
+                <p id="signin-error" class="hidden text-sm text-red-600"></p>
+                <button type="submit" class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold transition-colors">
+                    Sign In &amp; Connect
+                </button>
+                <p class="text-center text-xs text-slate-400">Demo accounts are stored only in your browser.</p>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="form-signup" class="px-6 pb-6 space-y-4" novalidate>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5">Display Name</label>
+                    <input id="signup-name" type="text" maxlength="24" autocomplete="name"
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-soft-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder="How others will see you">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5">Username (letters, numbers, _ only)</label>
+                    <input id="signup-user" type="text" maxlength="20" autocomplete="username"
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-soft-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder="e.g. alex_21">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5">Password (min 4 characters)</label>
+                    <input id="signup-pass" type="password" minlength="4" autocomplete="new-password"
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-soft-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder="••••••••">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5">Your Region / Country</label>
+                    <input id="signup-region" type="text" maxlength="30" autocomplete="country-name"
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-soft-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder="e.g. India, USA, Japan">
+                </div>
+                <label class="flex items-start gap-3 cursor-pointer select-none">
+                    <input id="signup-age" type="checkbox" class="mt-1 w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+                    <span class="text-sm text-slate-600">I confirm I am <strong>18 years or older</strong> and agree to the <a href="guidelines.html" target="_blank" class="text-primary-600 underline">Community Guidelines</a> (no adult content).</span>
+                </label>
+                <p id="signup-error" class="hidden text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2"></p>
+                <button type="submit" id="btn-signup" class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold transition-colors">
+                    Create Account
+                </button>
+                <p class="text-center text-xs text-slate-400">After signup you can use Text &amp; Video chat.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== SERVER WARNING (file:// or offline) ========== -->
+    <div id="server-warning" class="hidden fixed inset-0 z-[90] bg-slate-900/90 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-5">
+                <i class="fas fa-server"></i>
+            </div>
+            <h2 class="font-display text-2xl font-bold text-slate-900 mb-3">Server Required</h2>
+            <p class="text-slate-600 mb-4 leading-relaxed">
+                PeerPath needs the signaling server for matching, video, and chat.
+                Open the project folder in a terminal and run:
+            </p>
+            <pre class="bg-slate-900 text-green-400 text-left text-sm rounded-xl px-4 py-3 mb-5 overflow-x-auto">cd peerpath
+node server.js</pre>
+            <p class="text-slate-600 mb-6 text-sm">Then open <strong>http://localhost:3000</strong> in your browser (not the HTML file directly).</p>
+            <button id="retry-server" class="px-6 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold">
+                Retry Connection
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== MAIN APP ========== -->
+    <div id="app" class="h-full flex-col" style="display:none">
+        <header class="bg-white border-b border-slate-200 px-3 sm:px-4 py-2.5 flex items-center justify-between shrink-0 z-20">
+            <div class="flex items-center gap-2.5">
+                <a href="index.html" class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+                        <i class="fas fa-route text-white text-xs"></i>
+                    </div>
+                    <span class="font-display font-bold text-lg text-slate-900 hidden sm:inline">Peer<span class="text-primary-600">Path</span></span>
+                </a>
+            </div>
+
+            <div id="match-status" class="flex items-center gap-2 text-sm">
+                <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                <span class="text-slate-500 font-medium">Not connected</span>
+            </div>
+
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <span id="current-mode-badge" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-xs font-medium text-slate-600">
+                    <i class="fas fa-comment-dots"></i> Text
+                </span>
+                <button id="friends-btn" class="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary-600 transition-colors" title="Friends">
+                    <i class="fas fa-user-friends"></i>
+                    <span id="friends-count" class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary-600 text-white text-[10px] font-bold flex items-center justify-center hidden">0</span>
+                </button>
+                <div class="relative">
+                    <button id="user-menu-btn" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 transition-colors">
+                        <div id="user-avatar" class="w-8 h-8 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center">?</div>
+                        <span id="user-display-name" class="hidden sm:inline text-sm font-medium text-slate-700 max-w-[100px] truncate">User</span>
+                        <i class="fas fa-chevron-down text-xs text-slate-400"></i>
+                    </button>
+                    <div id="user-dropdown" class="hidden absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50">
+                        <div class="px-3 py-2 border-b border-slate-100">
+                            <p id="dd-name" class="text-sm font-semibold text-slate-900 truncate"></p>
+                            <p id="dd-region" class="text-xs text-slate-500 truncate"></p>
+                        </div>
+                        <a href="guidelines.html" class="block px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"><i class="fas fa-book w-5"></i> Guidelines</a>
+                        <button id="logout-btn" class="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50"><i class="fas fa-sign-out-alt w-5"></i> Log out</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 flex overflow-hidden">
+            <aside id="friends-panel" class="hidden w-72 bg-white border-r border-slate-200 flex-col shrink-0">
+                <div class="p-4 border-b border-slate-100">
+                    <h3 class="font-semibold text-slate-900 flex items-center gap-2">
+                        <i class="fas fa-user-friends text-primary-500"></i> Your Friends
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1">People you connected with</p>
+                </div>
+                <div id="friends-list" class="flex-1 overflow-y-auto p-3 space-y-2">
+                    <p class="text-sm text-slate-400 text-center py-8">No friends yet.</p>
+                </div>
+            </aside>
+
+            <main class="flex-1 flex flex-col bg-soft-50 min-w-0">
+                <div id="partner-bar" class="hidden bg-white border-b border-slate-200 px-3 sm:px-4 py-2.5 flex items-center justify-between shrink-0">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div id="partner-avatar" class="w-9 h-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold text-sm shrink-0"></div>
+                        <div class="min-w-0">
+                            <div class="font-semibold text-slate-900 text-sm truncate" id="partner-name">—</div>
+                            <div class="text-xs text-slate-500 truncate" id="partner-meta">—</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                        <button id="friend-btn" class="px-2.5 sm:px-3 py-1.5 rounded-lg bg-accent-50 text-accent-700 text-xs sm:text-sm font-medium hover:bg-accent-100 transition-colors flex items-center gap-1">
+                            <i class="fas fa-user-plus"></i> <span class="hidden sm:inline">Friend</span>
+                        </button>
+                        <button id="report-btn" class="px-2.5 sm:px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs sm:text-sm font-medium hover:bg-red-100 transition-colors flex items-center gap-1">
+                            <i class="fas fa-flag"></i> <span class="hidden sm:inline">Report</span>
+                        </button>
+                        <button id="next-btn" class="px-2.5 sm:px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs sm:text-sm font-medium hover:bg-slate-200 transition-colors flex items-center gap-1">
+                            <i class="fas fa-forward"></i> <span class="hidden sm:inline">Next</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
+                    <!-- Video Area -->
+                    <div id="video-area" class="hidden flex-col bg-slate-900 relative shrink-0 lg:w-[52%] xl:w-[55%]">
+                        <div class="flex-1 relative min-h-[180px] sm:min-h-[240px]">
+                            <video id="remote-video" class="absolute inset-0 w-full h-full object-cover hidden" autoplay playsinline></video>
+                            <div id="remote-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-white/70 bg-gradient-to-b from-slate-800 to-slate-900">
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-700 flex items-center justify-center text-2xl sm:text-3xl mb-3 font-bold" id="remote-avatar-big">?</div>
+                                <p class="text-sm font-medium" id="remote-name-big">Waiting for partner video...</p>
+                                <p class="text-xs text-white/40 mt-1">Partner video appears here when connected</p>
+                            </div>
+                            <div class="absolute bottom-3 right-3 w-28 sm:w-36 aspect-[4/3] rounded-xl overflow-hidden border-2 border-white/30 shadow-xl bg-slate-800 z-10">
+                                <video id="local-video" class="w-full h-full object-cover mirror" autoplay playsinline muted></video>
+                                <div id="local-off" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-800 text-white/50 text-xs gap-1">
+                                    <i class="fas fa-video-slash text-lg"></i>
+                                    <span>Camera off</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-950 px-4 py-2.5 flex items-center justify-center gap-3">
+                            <button id="toggle-mic" class="w-11 h-11 rounded-full bg-slate-700 hover:bg-slate-600 text-white flex items-center justify-center transition-colors" title="Mute / Unmute">
+                                <i class="fas fa-microphone" id="mic-icon"></i>
+                            </button>
+                            <button id="toggle-cam" class="w-11 h-11 rounded-full bg-slate-700 hover:bg-slate-600 text-white flex items-center justify-center transition-colors" title="Camera On / Off">
+                                <i class="fas fa-video" id="cam-icon"></i>
+                            </button>
+                            <button id="end-video-btn" class="w-11 h-11 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center transition-colors" title="End video (keep text)">
+                                <i class="fas fa-phone-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Text side -->
+                    <div class="flex-1 flex flex-col min-w-0 min-h-0">
+                        <div id="messages" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3">
+                            <div id="empty-state" class="h-full flex flex-col items-center justify-center text-center px-4">
+                                <div class="w-20 h-20 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center text-3xl mb-5">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <h2 class="font-display text-2xl font-bold text-slate-900 mb-2">Ready to Connect?</h2>
+                                <p class="text-slate-600 max-w-md mb-2">Choose text or video. You will be matched with someone online.</p>
+                                <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-6 max-w-sm">
+                                    <i class="fas fa-info-circle"></i> Open a <strong>second browser tab</strong> on the same address and sign in with another account to test matching &amp; video.
+                                </p>
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <button id="start-text-btn" type="button" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold transition-all active:scale-95">
+                                        <i class="fas fa-comment-dots"></i> Text Only
+                                    </button>
+                                    <button id="start-video-btn" type="button" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-lg transition-all active:scale-95">
+                                        <i class="fas fa-video"></i> Video + Text
+                                    </button>
+                                </div>
+                                <p id="conn-status" class="mt-5 text-xs text-slate-400">Checking server connection...</p>
+                            </div>
+                        </div>
+
+                        <div id="typing-indicator" class="hidden px-4 pb-1">
+                            <div class="flex items-center gap-2 text-sm text-slate-400">
+                                <span class="flex gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay:0ms"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay:150ms"></span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay:300ms"></span>
+                                </span>
+                                <span>Partner is typing...</span>
+                            </div>
+                        </div>
+
+                        <div id="input-area" class="hidden bg-white border-t border-slate-200 p-3 sm:p-4 shrink-0">
+                            <form id="chat-form" class="flex items-end gap-2 sm:gap-3 max-w-4xl mx-auto">
+                                <div class="flex-1">
+                                    <textarea id="message-input" rows="1" placeholder="Type a respectful message..." maxlength="500"
+                                        class="w-full resize-none rounded-xl border border-slate-200 bg-soft-50 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent max-h-28"></textarea>
+                                </div>
+                                <button type="submit" class="px-4 sm:px-5 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                            <p class="text-center text-[11px] text-slate-400 mt-1.5">Respectful only. Adult content = ban. <a href="guidelines.html" class="underline hover:text-primary-600">Guidelines</a></p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div id="report-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="font-display font-bold text-xl text-slate-900">Report Conversation</h3>
+                <button id="close-report" class="p-2 rounded-lg hover:bg-slate-100 text-slate-400"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="text-sm text-slate-600 mb-5">Select a reason. The match will end and the report will be logged.</p>
+            <div class="space-y-2 mb-6">
+                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-primary-300 cursor-pointer">
+                    <input type="radio" name="report-reason" value="vulgar" class="text-primary-600">
+                    <span class="text-sm font-medium text-slate-700">Vulgar / Sexual content</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-primary-300 cursor-pointer">
+                    <input type="radio" name="report-reason" value="harassment" class="text-primary-600">
+                    <span class="text-sm font-medium text-slate-700">Harassment / Bullying</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-primary-300 cursor-pointer">
+                    <input type="radio" name="report-reason" value="spam" class="text-primary-600">
+                    <span class="text-sm font-medium text-slate-700">Spam / Scam</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-primary-300 cursor-pointer">
+                    <input type="radio" name="report-reason" value="other" class="text-primary-600">
+                    <span class="text-sm font-medium text-slate-700">Other inappropriate behavior</span>
+                </label>
+            </div>
+            <div class="flex gap-3">
+                <button id="cancel-report" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-medium">Cancel</button>
+                <button id="submit-report" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-medium shadow-xl max-w-[90vw]"></div>
+
+    <script src="js/chat.js"></script>
+</body>
+</html>

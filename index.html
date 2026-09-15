@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerPath – Safe Video & Text Connections Across the World</title>
+    <meta name="description" content="PeerPath connects people from different regions and generations safely via text and video. Overcome social anxiety, seek advice from seniors, make real friends – zero adult content, full moderation.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' },
+                        accent: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d' },
+                        soft: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Poppins', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-soft-50 text-slate-800 antialiased">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2.5 group">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                        <i class="fas fa-route text-white text-sm"></i>
+                    </div>
+                    <span class="font-display font-bold text-xl tracking-tight text-slate-900">Peer<span class="text-primary-600">Path</span></span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#purpose" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Purpose</a>
+                    <a href="#how-it-works" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">How it Works</a>
+                    <a href="#safety" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Safety</a>
+                    <a href="guidelines.html" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Guidelines</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="chat.html" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all">
+                        <i class="fas fa-video"></i> Start Connecting
+                    </a>
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white">
+            <div class="px-4 py-3 space-y-2">
+                <a href="#purpose" class="block py-2 text-sm font-medium text-slate-600">Purpose</a>
+                <a href="#how-it-works" class="block py-2 text-sm font-medium text-slate-600">How it Works</a>
+                <a href="#safety" class="block py-2 text-sm font-medium text-slate-600">Safety</a>
+                <a href="guidelines.html" class="block py-2 text-sm font-medium text-slate-600">Guidelines</a>
+                <a href="chat.html" class="block mt-2 text-center py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold">Start Connecting</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50"></div>
+        <div class="absolute top-20 right-0 w-96 h-96 bg-primary-200/30 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-accent-200/20 rounded-full blur-3xl"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <div class="text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-100 text-primary-700 text-xs font-semibold mb-6">
+                        <span class="w-2 h-2 rounded-full bg-accent-500 animate-pulse"></span>
+                        Safe • Video & Text • Global
+                    </div>
+                    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight mb-6">
+                        Connect Across<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600">Regions & Generations</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+                        PeerPath helps you overcome the fear of talking to new people, get genuine advice from seniors, reduce stress, and build real friendships — through safe text chat or video calls in a fully moderated, zero-tolerance adult-content environment.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="chat.html" class="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all text-base">
+                            <i class="fas fa-video"></i> Start Safe Video & Chat
+                        </a>
+                        <a href="#how-it-works" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white border border-slate-200 hover:border-primary-300 text-slate-700 font-semibold shadow-sm hover:shadow transition-all">
+                            How it Works
+                        </a>
+                    </div>
+                    <div class="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-5 text-sm text-slate-500">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-shield-alt text-accent-500"></i>
+                            <span>18+ Only</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-video text-accent-500"></i>
+                            <span>Video + Text</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-user-check text-accent-500"></i>
+                            <span>Fully Moderated</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-globe text-accent-500"></i>
+                            <span>50+ Countries</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hero visual card -->
+                <div class="relative">
+                    <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 md:p-8 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="flex -space-x-2">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white flex items-center justify-center text-white text-xs font-bold">IN</div>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-white flex items-center justify-center text-white text-xs font-bold">US</div>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 border-2 border-white flex items-center justify-center text-white text-xs font-bold">UK</div>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 border-2 border-white flex items-center justify-center text-white text-xs font-bold">JP</div>
+                            </div>
+                            <span class="text-sm text-slate-500 font-medium">Live video & text matches</span>
+                        </div>
+                        <!-- Mini video preview mock -->
+                        <div class="relative rounded-xl overflow-hidden bg-slate-900 aspect-video mb-4">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center text-white/80">
+                                    <i class="fas fa-video text-3xl mb-2 opacity-60"></i>
+                                    <p class="text-xs">Video + Text Chat</p>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-2 right-2 w-20 h-14 rounded-lg bg-slate-700 border border-white/20 flex items-center justify-center">
+                                <i class="fas fa-user text-white/50 text-sm"></i>
+                            </div>
+                            <div class="absolute bottom-2 left-2 flex gap-1.5">
+                                <span class="w-7 h-7 rounded-full bg-black/50 flex items-center justify-center text-white text-xs"><i class="fas fa-microphone"></i></span>
+                                <span class="w-7 h-7 rounded-full bg-black/50 flex items-center justify-center text-white text-xs"><i class="fas fa-video"></i></span>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex gap-3">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 text-xs font-bold shrink-0">A</div>
+                                <div class="bg-soft-100 rounded-2xl rounded-tl-sm px-3.5 py-2 text-sm text-slate-700 max-w-[80%]">
+                                    Hi! I'm 22 from India. A bit nervous talking on video... any advice?
+                                </div>
+                            </div>
+                            <div class="flex gap-3 justify-end">
+                                <div class="bg-primary-600 text-white rounded-2xl rounded-tr-sm px-3.5 py-2 text-sm max-w-[80%]">
+                                    Welcome! I'm 48 from Canada. Take it slow — people love feeling heard 😊
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-accent-100 flex items-center justify-center text-accent-700 text-xs font-bold shrink-0">S</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs text-slate-400"><i class="fas fa-lock text-accent-500 mr-1"></i> Moderated & Safe</span>
+                            <div class="flex gap-2">
+                                <span class="px-2.5 py-1 rounded-lg bg-accent-50 text-accent-700 text-xs font-medium">Friend</span>
+                                <span class="px-2.5 py-1 rounded-lg bg-red-50 text-red-600 text-xs font-medium">Report</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Purpose Section -->
+    <section id="purpose" class="py-20 md:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">Built for Meaningful Connections</h2>
+                <p class="text-lg text-slate-600">We designed PeerPath to solve real problems Gen Z and others face — social anxiety, lack of guidance, and isolation — with both text and video.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="group p-7 rounded-2xl bg-soft-50 border border-slate-100 hover:border-primary-200 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center text-xl mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="font-display font-semibold text-xl text-slate-900 mb-3">Overcome Social Fear</h3>
+                    <p class="text-slate-600 leading-relaxed">Practice talking to boys and girls from around the world via text or video in a low-pressure, moderated space. Build confidence step by step.</p>
+                </div>
+                
+                <div class="group p-7 rounded-2xl bg-soft-50 border border-slate-100 hover:border-accent-200 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-accent-100 text-accent-600 flex items-center justify-center text-xl mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 class="font-display font-semibold text-xl text-slate-900 mb-3">Gen Z ↔ Senior Advice</h3>
+                    <p class="text-slate-600 leading-relaxed">Young people connect with experienced seniors for career, life, and emotional guidance. Seniors share wisdom and feel valued — true intergenerational bridge.</p>
+                </div>
+                
+                <div class="group p-7 rounded-2xl bg-soft-50 border border-slate-100 hover:border-primary-200 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-5 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="font-display font-semibold text-xl text-slate-900 mb-3">Video + Text + Friends</h3>
+                    <p class="text-slate-600 leading-relaxed">Choose text-only or video + text. When a conversation clicks — send a friend request. Keep the connection beyond the random match.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works -->
+    <section id="how-it-works" class="py-20 md:py-28 bg-gradient-to-b from-soft-50 to-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-4">How PeerPath Works</h2>
+                <p class="text-lg text-slate-600">Simple, safe, and intentional. Choose text or video and start connecting.</p>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="relative text-center p-6">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary-600 text-white flex items-center justify-center text-xl font-bold mb-5 shadow-lg">1</div>
+                    <h3 class="font-semibold text-lg text-slate-900 mb-2">Verify & Choose Mode</h3>
+                    <p class="text-sm text-slate-600">Confirm 18+. Pick Text-only or Video + Text. Camera is optional and under your control.</p>
+                </div>
+                <div class="relative text-center p-6">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary-600 text-white flex items-center justify-center text-xl font-bold mb-5 shadow-lg">2</div>
+                    <h3 class="font-semibold text-lg text-slate-900 mb-2">Get Matched</h3>
+                    <p class="text-sm text-slate-600">We connect you with someone from a different region — Gen Z, adult, or senior — based on availability.</p>
+                </div>
+                <div class="relative text-center p-6">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary-600 text-white flex items-center justify-center text-xl font-bold mb-5 shadow-lg">3</div>
+                    <h3 class="font-semibold text-lg text-slate-900 mb-2">Chat or Video Safely</h3>
+                    <p class="text-sm text-slate-600">Text side-by-side with video. Mute, camera off, or end anytime. Real-time safety signals.</p>
+                </div>
+                <div class="relative text-center p-6">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary-600 text-white flex items-center justify-center text-xl font-bold mb-5 shadow-lg">4</div>
+                    <h3 class="font-semibold text-lg text-slate-900 mb-2">Friend or Report</h3>
+                    <p class="text-sm text-slate-600">Like the conversation? Send a friend request. Anything inappropriate? Report instantly.</p>
+                </div>
+            </div>
+            
+            <div class="mt-14 text-center">
+                <a href="chat.html" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all">
+                    Try it Now — Free & Safe <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety Section -->
+    <section id="safety" class="py-20 md:py-28 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent-500/20 text-accent-300 text-xs font-semibold mb-5">
+                    <i class="fas fa-shield-halved"></i> Full Safety First
+                </div>
+                <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">Zero Tolerance for Harm</h2>
+                <p class="text-lg text-slate-300">PeerPath is designed to be the opposite of toxic random chat platforms. Safety is the foundation — for both text and video.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-accent-500/20 text-accent-400 flex items-center justify-center mb-4">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">No Adult Content</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Strict ban on any sexual, explicit, or adult material in text or video. Automated filters + human review. Instant permanent ban.</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-accent-500/20 text-accent-400 flex items-center justify-center mb-4">
+                        <i class="fas fa-video-slash"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">You Control Camera</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Camera and mic are optional. Turn them off anytime. Video is never required — text-only mode is always available.</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-accent-500/20 text-accent-400 flex items-center justify-center mb-4">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">One-Click Report</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Every session has a visible Report button. Reports are reviewed quickly. Abusive users are removed.</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-accent-500/20 text-accent-400 flex items-center justify-center mb-4">
+                        <i class="fas fa-user-lock"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">18+ Age Gate</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Only adults can join. We verify age intent at entry and enforce community standards strictly.</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-accent-500/20 text-accent-400 flex items-center justify-center mb-4">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Friend Requests Only</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">No forced contact. You choose who stays in your network after a good conversation.</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                    <div class="w-11 h-11 rounded-xl bg-accent-500/20 text-accent-400 flex items-center justify-center mb-4">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Clear Guidelines</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Transparent community rules. Everyone knows what is expected — kindness, respect, zero harassment.</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <a href="guidelines.html" class="inline-flex items-center gap-2 text-accent-300 hover:text-accent-200 font-medium transition-colors">
+                    Read Full Community Guidelines <i class="fas fa-arrow-right text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 md:py-24 bg-gradient-to-r from-primary-600 to-primary-800">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-5">Ready to Talk Without Fear?</h2>
+            <p class="text-primary-100 text-lg mb-8 max-w-2xl mx-auto">Join people who are building confidence, seeking advice, and making real friends across the globe — safely with text or video.</p>
+            <a href="chat.html" class="inline-flex items-center gap-2.5 px-8 py-4 rounded-xl bg-white text-primary-700 font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all">
+                <i class="fas fa-video"></i> Enter PeerPath
+            </a>
+            <p class="mt-6 text-primary-200 text-sm">Free • 18+ • Text & Video • Fully Moderated</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
+                        <i class="fas fa-route text-white text-xs"></i>
+                    </div>
+                    <span class="font-display font-bold text-white">PeerPath</span>
+                </div>
+                <div class="flex flex-wrap justify-center gap-6 text-sm">
+                    <a href="#purpose" class="hover:text-white transition-colors">Purpose</a>
+                    <a href="#safety" class="hover:text-white transition-colors">Safety</a>
+                    <a href="guidelines.html" class="hover:text-white transition-colors">Guidelines</a>
+                    <a href="chat.html" class="hover:text-white transition-colors">Connect</a>
+                </div>
+                <p class="text-sm">© 2026 PeerPath. Built for safe human connection.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
