@@ -503,19 +503,19 @@
       };
     }
 
-    if (localStream) {
-      localStream.getTracks().forEach(function (t) { pc.addTrack(t, localStream); });
-    }
-  }
+if (localStream) {
+  localStream.getTracks().forEach(function (t) { pc.addTrack(t, localStream); });
+}
+}
 
-  // Process any WebRTC signals that arrived
+// Process any WebRTC signals that arrived
 // before the PeerConnection was ready.
-    if (pendingSignals.length) {
-        var queued = pendingSignals.slice();
-          pendingSignals = [];
+if (pendingSignals.length) {
+    var queued = pendingSignals.slice();
+    pendingSignals = [];
 
-          for (var i = 0; i < queued.length; i++) {
-              await handleRTC(queued[i]);
+    for (var i = 0; i < queued.length; i++) {
+        await handleRTC(queued[i]);
     }
 }
 
