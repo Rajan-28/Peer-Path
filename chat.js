@@ -508,6 +508,17 @@
     }
   }
 
+  // Process any WebRTC signals that arrived
+// before the PeerConnection was ready.
+    if (pendingSignals.length) {
+        var queued = pendingSignals.slice();
+          pendingSignals = [];
+
+          for (var i = 0; i < queued.length; i++) {
+              await handleRTC(queued[i]);
+    }
+}
+
   function setupDC(ch) {
     ch.onmessage = function (ev) {
       try {
@@ -520,23 +531,55 @@
   }
 
   async function handleRTC(signal) {
-    if (!pc) return;
-    try {
-      if (signal.type === 'offer') {
-        await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
-        var ans = await pc.createAnswer();
-        await pc.setLocalDescription(ans);
-        send({ type: 'signal', to: partnerId, signal: { type: 'answer', sdp: pc.localDescription } });
-      } else if (signal.type === 'answer') {
-        await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
-      } else if (signal.type === 'ice' && signal.candidate) {
-        try { await pc.addIceCandidate(new RTCIceCandidate(signal.candidate)); } catch (e) {}
-      }
-    } catch (err) {
-      console.error('RTC signal error', err);
-    }
-  }
 
+    // If PeerConnection is not ready yet,
+    // save the signal and process it later.
+    if (!pc) {
+        pendingSignals.push(signal);
+        return;
+    }
+
+    try {
+        if (signal.type === 'offer') {
+
+            await pc.setRemoteDescription(
+                new RTCSessionDescription(signal.sdp)
+            );
+
+            var ans = await pc.createAnswer();
+
+            await pc.setLocalDescription(ans);
+
+            send({
+                type: 'signal',
+                to: partnerId,
+                signal: {
+                    type: 'answer',
+                    sdp: pc.localDescription
+                }
+            });
+
+        } else if (signal.type === 'answer') {
+
+            await pc.setRemoteDescription(
+                new RTCSessionDescription(signal.sdp)
+            );
+
+        } else if (signal.type === 'ice' && signal.candidate) {
+
+            try {
+                await pc.addIceCandidate(
+                    new RTCIceCandidate(signal.candidate)
+                );
+            } catch (e) {
+                console.warn('ICE candidate error:', e);
+            }
+        }
+
+    } catch (err) {
+        console.error('RTC signal error', err);
+    }
+}
   async function startOffer() {
     if (!pc || role !== 'offerer') return;
     try {
