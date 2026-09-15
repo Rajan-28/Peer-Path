@@ -35,7 +35,7 @@
    *
    * CHANGE ONLY THIS URL AFTER DEPLOYING.
    */
-  var RENDER_WS_URL = 'https://peer-path-bbh1.onrender.com';
+  var RENDER_WS_URL = 'wss://peer-path-bbh1.onrender.com';
 
   var isLocal =
     location.hostname === 'localhost' ||
