@@ -33,6 +33,8 @@
   var pc = null;
   var dc = null;
   var localStream = null;
+
+  var pendingSignals = [];
   var matched = false;
   var searching = false;
   var micOn = true;
