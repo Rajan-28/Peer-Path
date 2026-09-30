@@ -6,7 +6,7 @@
   'use strict';
 
   var isFile = location.protocol === 'file:';
-  var WS_URL = isFile ? null : ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
+ var WS_URL = 'wss://peer-path-bbh1.onrender.com';
   var ICE = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
