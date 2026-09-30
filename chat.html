@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     <script>
         tailwind.config = {
             theme: {
@@ -238,15 +238,65 @@ node server.js</pre>
                     <!-- Text side -->
                     <div class="flex-1 flex flex-col min-w-0 min-h-0">
                         <div id="messages" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3">
-                            <div id="empty-state" class="h-full flex flex-col items-center justify-center text-center px-4">
-                                <div class="w-20 h-20 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center text-3xl mb-5">
-                                    <i class="fas fa-globe"></i>
+                            <div id="empty-state" class="h-full flex flex-col items-center justify-center text-center px-4 py-6 overflow-y-auto">
+                                <div class="w-16 h-16 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center text-2xl mb-4">
+                                    <i class="fas fa-hands-helping"></i>
                                 </div>
-                                <h2 class="font-display text-2xl font-bold text-slate-900 mb-2">Ready to Connect?</h2>
-                                <p class="text-slate-600 max-w-md mb-2">Choose text or video. You will be matched with someone online.</p>
-                                <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-6 max-w-sm">
-                                    <i class="fas fa-info-circle"></i> Open a <strong>second browser tab</strong> on the same address and sign in with another account to test matching &amp; video.
+                                <h2 class="font-display text-2xl font-bold text-slate-900 mb-1">What do you want to talk about?</h2>
+                                <p class="text-slate-600 max-w-lg mb-4 text-sm">Pick a topic to find someone who can listen, support, or share advice. PeerPath is for helpful, respectful conversations.</p>
+
+                                <div id="topics-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-xl w-full mb-4 text-left">
+                                    <button type="button" class="topic-btn" data-topic="emotional" data-label="Emotional support">
+                                        <i class="fas fa-heart text-rose-500"></i>
+                                        <span>Emotional support</span>
+                                        <small>Feelings, low days, being heard</small>
+                                    </button>
+                                    <button type="button" class="topic-btn" data-topic="stress" data-label="Stress & anxiety">
+                                        <i class="fas fa-spa text-violet-500"></i>
+                                        <span>Stress &amp; anxiety</span>
+                                        <small>Calm down, cope, breathe</small>
+                                    </button>
+                                    <button type="button" class="topic-btn" data-topic="growth" data-label="Self-help & growth">
+                                        <i class="fas fa-seedling text-emerald-500"></i>
+                                        <span>Self-help &amp; growth</span>
+                                        <small>Habits, confidence, mindset</small>
+                                    </button>
+                                    <button type="button" class="topic-btn" data-topic="life" data-label="Life advice">
+                                        <i class="fas fa-compass text-amber-500"></i>
+                                        <span>Life advice</span>
+                                        <small>Decisions, family, real life</small>
+                                    </button>
+                                    <button type="button" class="topic-btn" data-topic="health" data-label="Health & wellness">
+                                        <i class="fas fa-notes-medical text-sky-500"></i>
+                                        <span>Health &amp; wellness</span>
+                                        <small>General wellbeing talk</small>
+                                    </button>
+                                    <button type="button" class="topic-btn" data-topic="diet" data-label="Diet & nutrition">
+                                        <i class="fas fa-apple-alt text-green-500"></i>
+                                        <span>Diet &amp; nutrition</span>
+                                        <small>Food habits, healthy eating</small>
+                                    </button>
+                                    <button type="button" class="topic-btn" data-topic="gym" data-label="Gym & fitness">
+                                        <i class="fas fa-dumbbell text-orange-500"></i>
+                                        <span>Gym &amp; fitness</span>
+                                        <small>Workouts, motivation, form</small>
+                                    </button>
+                                    <button type="button" class="topic-btn" data-topic="career" data-label="Career & studies">
+                                        <i class="fas fa-graduation-cap text-indigo-500"></i>
+                                        <span>Career &amp; studies</span>
+                                        <small>School, jobs, skills</small>
+                                    </button>
+                                    <button type="button" class="topic-btn" data-topic="open" data-label="Open chat">
+                                        <i class="fas fa-comments text-slate-500"></i>
+                                        <span>Open chat</span>
+                                        <small>Any respectful topic</small>
+                                    </button>
+                                </div>
+
+                                <p id="selected-topic-label" class="text-sm text-primary-700 font-medium mb-3 hidden">
+                                    Selected: <span id="selected-topic-text">—</span>
                                 </p>
+
                                 <div class="flex flex-col sm:flex-row gap-3">
                                     <button id="start-text-btn" type="button" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold transition-all active:scale-95">
                                         <i class="fas fa-comment-dots"></i> Text Only
@@ -255,7 +305,8 @@ node server.js</pre>
                                         <i class="fas fa-video"></i> Video + Text
                                     </button>
                                 </div>
-                                <p id="conn-status" class="mt-5 text-xs text-slate-400">Checking server connection...</p>
+                                <p class="text-xs text-slate-400 mt-3 max-w-md">Tip: choose the same topic in two tabs to test matching. Not a substitute for professional medical or mental-health care.</p>
+                                <p id="conn-status" class="mt-3 text-xs text-slate-400">Checking server connection...</p>
                             </div>
                         </div>
 
@@ -323,6 +374,6 @@ node server.js</pre>
 
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-medium shadow-xl max-w-[90vw]"></div>
 
-    <script src="chat.js"></script>
+    <script src="js/chat.js"></script>
 </body>
 </html>
