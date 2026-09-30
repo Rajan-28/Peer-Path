@@ -100,6 +100,7 @@ function encodeClose() {
 
 // ---------- Client & Matchmaking state ----------
 const clients = new Map();
+// Per-mode queues of client ids. Matching prefers same topic.
 const waiting = { text: [], video: [] };
 
 function uid() {
@@ -131,30 +132,77 @@ function unpair(id) {
   }
 }
 
+function topicsCompatible(t1, t2) {
+  const a = (t1 || 'open').toLowerCase();
+  const b = (t2 || 'open').toLowerCase();
+  if (a === b) return true;
+  if (a === 'open' || b === 'open') return true;
+  return false;
+}
+
+function pairClients(aId, bId, mode) {
+  const a = clients.get(aId);
+  const b = clients.get(bId);
+  if (!a || !b) return false;
+  a.partnerId = bId;
+  b.partnerId = aId;
+  const topicLabel = (a.topicLabel || b.topicLabel || a.topic || 'Open chat');
+  send(a, {
+    type: 'matched',
+    partnerId: bId,
+    role: 'offerer',
+    partner: Object.assign({}, b.profile || {}, { topic: b.topic, topicLabel: b.topicLabel }),
+    mode,
+    topic: a.topic || b.topic,
+    topicLabel
+  });
+  send(b, {
+    type: 'matched',
+    partnerId: aId,
+    role: 'answerer',
+    partner: Object.assign({}, a.profile || {}, { topic: a.topic, topicLabel: a.topicLabel }),
+    mode,
+    topic: b.topic || a.topic,
+    topicLabel
+  });
+  return true;
+}
+
 function tryMatch(mode) {
   const q = waiting[mode];
-  while (q.length >= 2) {
-    const aId = q.shift();
-    const bId = q.shift();
+  // Clean dead ids
+  for (let i = q.length - 1; i >= 0; i--) {
+    if (!clients.get(q[i])) q.splice(i, 1);
+  }
+  // Prefer exact same topic pairs, then compatible (open)
+  let i = 0;
+  while (i < q.length) {
+    const aId = q[i];
     const a = clients.get(aId);
-    const b = clients.get(bId);
-    if (!a || !b) continue;
-    a.partnerId = bId;
-    b.partnerId = aId;
-    send(a, {
-      type: 'matched',
-      partnerId: bId,
-      role: 'offerer',
-      partner: b.profile || {},
-      mode
-    });
-    send(b, {
-      type: 'matched',
-      partnerId: aId,
-      role: 'answerer',
-      partner: a.profile || {},
-      mode
-    });
+    if (!a) { q.splice(i, 1); continue; }
+    let found = -1;
+    // 1) exact topic match
+    for (let j = i + 1; j < q.length; j++) {
+      const b = clients.get(q[j]);
+      if (!b) continue;
+      if ((a.topic || 'open') === (b.topic || 'open')) { found = j; break; }
+    }
+    // 2) compatible (either open)
+    if (found < 0) {
+      for (let j = i + 1; j < q.length; j++) {
+        const b = clients.get(q[j]);
+        if (!b) continue;
+        if (topicsCompatible(a.topic, b.topic)) { found = j; break; }
+      }
+    }
+    if (found >= 0) {
+      const bId = q[found];
+      q.splice(found, 1);
+      q.splice(i, 1);
+      pairClients(aId, bId, mode);
+      continue; // do not increment i
+    }
+    i++;
   }
 }
 
@@ -253,8 +301,10 @@ function handleMessage(id, data) {
       unpair(id);
       client.mode = data.mode === 'video' ? 'video' : 'text';
       client.profile = data.profile || {};
+      client.topic = (data.topic || (data.profile && data.profile.topic) || 'open').toString().toLowerCase();
+      client.topicLabel = data.topicLabel || (data.profile && data.profile.topicLabel) || client.topic;
       waiting[client.mode].push(id);
-      send(client, { type: 'searching', mode: client.mode });
+      send(client, { type: 'searching', mode: client.mode, topic: client.topic, topicLabel: client.topicLabel });
       tryMatch(client.mode);
       break;
     }
